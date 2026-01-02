@@ -17,6 +17,8 @@
             --text-sec: #8E8E93;
             --border: #E5E5EA;
             --nav-height: 80px;
+            --keypad-bg: #E5E5EA;
+            --key-bg: #FFFFFF;
         }
 
         [data-theme="dark"] {
@@ -28,6 +30,8 @@
             --text: #FFFFFF;
             --text-sec: #8E8E93;
             --border: #38383A;
+            --keypad-bg: #2C2C2E;
+            --key-bg: #3A3A3C;
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -96,7 +100,8 @@
         
         /* Transaction List */
         .date-header { padding: 8px 15px; background: var(--bg); color: var(--text-sec); font-size: 13px; font-weight: 500; display: flex; justify-content: space-between; position: sticky; top: 0; z-index: 5; }
-        .trans-item { background: var(--surface); padding: 12px 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); }
+        .trans-item { background: var(--surface); padding: 12px 15px; display: flex; align-items: center; border-bottom: 1px solid var(--border); cursor: pointer; }
+        .trans-item:active { background: var(--bg); }
         .trans-icon-box { width: 40px; height: 40px; border-radius: 12px; background: var(--bg); display: flex; align-items: center; justify-content: center; font-size: 20px; margin-right: 15px; flex-shrink: 0; }
         .trans-info { flex: 1; }
         .trans-cat { font-weight: 500; font-size: 16px; }
@@ -108,31 +113,46 @@
         .fab:active { transform: scale(0.95); }
 
         /* Add Modal */
-        #view-add { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 200; display: flex; flex-direction: column; }
-        .add-header { background: var(--surface); padding: 10px; display: flex; justify-content: center; gap: 10px; border-bottom: 1px solid var(--border); }
+        #view-add { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--surface); z-index: 200; display: flex; flex-direction: column; }
+        
+        /* Redesigned Add Header */
+        .add-header { background: var(--surface); padding: 10px 15px; display: flex; justify-content: space-between; align-items: center; }
+        .type-toggle-container { display: flex; background: var(--bg); padding: 3px; border-radius: 10px; width: 60%; margin: 0 auto; }
         .type-seg { flex: 1; padding: 8px; text-align: center; border-radius: 8px; font-weight: 600; font-size: 14px; color: var(--text-sec); cursor: pointer; transition: 0.2s; }
-        .type-seg.active.inc { background: rgba(52, 199, 89, 0.15); color: var(--income); }
-        .type-seg.active.exp { background: rgba(255, 59, 48, 0.15); color: var(--expense); }
-        .calc-display { background: var(--surface); padding: 20px; text-align: right; border-bottom: 1px solid var(--border); }
-        .calc-amt { font-size: 36px; font-weight: 700; color: var(--text); }
-        .calc-note-input { width: 100%; border: none; text-align: right; font-size: 14px; color: var(--text-sec); outline: none; background: transparent; margin-top: 5px; }
+        .type-seg.active.inc { background: var(--surface); color: var(--income); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .type-seg.active.exp { background: var(--surface); color: var(--expense); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         
-        .grid-section { flex: 1; overflow-y: auto; padding: 15px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; align-content: start; }
-        .cat-item { display: flex; flex-direction: column; align-items: center; gap: 5px; cursor: pointer; opacity: 0.7; }
-        .cat-item.active { opacity: 1; transform: scale(1.05); }
-        .cat-icon { width: 50px; height: 50px; background: var(--surface); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 24px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 2px solid transparent; transition: 0.2s; }
-        .cat-item.active .cat-icon { border-color: var(--primary); background: rgba(0, 122, 255, 0.1); }
-        .cat-name { font-size: 11px; color: var(--text-sec); text-align: center; }
+        /* Redesigned Display Area */
+        .input-area { background: var(--surface); padding: 10px 20px; flex: 1; display: flex; flex-direction: column; justify-content: flex-end; }
         
-        /* Updated Numpad CSS */
-        .numpad { background: var(--surface); padding: 10px; padding-bottom: 20px; display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 55px; gap: 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); }
-        .num-btn { width: 100%; height: 100%; border-radius: 12px; background: var(--bg); border: none; font-size: 22px; font-weight: 500; color: var(--text); cursor: pointer; transition: 0.1s; }
-        .num-btn:active { background: #d1d1d6; }
-        .num-btn.primary { background: var(--primary); color: white; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-        .num-btn.date-btn { font-size: 14px; color: var(--primary); background: rgba(0,122,255,0.1); font-weight: 600; }
-        .num-btn.op-btn { color: var(--primary); background: rgba(0,122,255,0.05); font-size: 24px; }
-        .num-btn.del-btn { color: var(--expense); background: rgba(255,59,48,0.05); }
+        .calc-display { padding: 10px 0; text-align: right; margin-bottom: 10px; }
+        .calc-amt { font-size: 48px; font-weight: 700; color: var(--text); line-height: 1.1; }
+        
+        /* Input Row (Note & Category) */
+        .input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; background: var(--bg); padding: 10px; border-radius: 12px; }
+        .selected-cat-icon { font-size: 24px; min-width: 30px; text-align: center; }
+        .calc-note-input { flex: 1; border: none; background: transparent; font-size: 16px; color: var(--text); outline: none; }
+        
+        /* Category Grid */
+        .category-scroll { overflow-x: auto; white-space: nowrap; padding: 10px 0; margin-bottom: 10px; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+        .category-scroll::-webkit-scrollbar { display: none; }
+        .cat-chip { display: inline-flex; flex-direction: column; align-items: center; margin-right: 15px; opacity: 0.6; transition: 0.2s; cursor: pointer; }
+        .cat-chip.active { opacity: 1; transform: scale(1.1); }
+        .cat-chip-icon { width: 50px; height: 50px; background: var(--bg); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 5px; border: 2px solid transparent; }
+        .cat-chip.active .cat-chip-icon { border-color: var(--primary); background: rgba(0,122,255,0.1); }
+        .cat-chip-name { font-size: 11px; font-weight: 500; }
 
+        /* Numpad Redesign */
+        .numpad { background: var(--keypad-bg); padding: 10px; padding-bottom: 30px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; }
+        .num-btn { width: 100%; height: 60px; background: var(--key-bg); border: none; font-size: 22px; font-weight: 500; color: var(--text); cursor: pointer; transition: 0.1s; border-radius: 5px; }
+        .num-btn:active { background: #d1d1d6; }
+        
+        /* Special Keys */
+        .num-btn.primary { background: var(--primary); color: white; border-radius: 5px; }
+        .num-btn.date-btn { font-size: 14px; color: var(--text); font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1.2; }
+        .num-btn.op-btn { color: var(--primary); font-size: 24px; background: #EFEFF4; }
+        [data-theme="dark"] .num-btn.op-btn { background: #48484A; }
+        
         /* Bottom Nav */
         nav { height: var(--nav-height); background: var(--surface); position: fixed; bottom: 0; width: 100%; display: flex; justify-content: space-around; align-items: center; border-top: 1px solid var(--border); padding-bottom: 10px; z-index: 100; }
         .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-sec); gap: 5px; padding: 10px; flex: 1; cursor: pointer; }
@@ -382,49 +402,62 @@
         <!-- Add Transaction (Full Screen Modal) -->
         <div id="view-add" class="hidden">
             <div class="add-header">
-                <div class="type-seg active exp" id="btn-type-exp" onclick="app.setAddType('expense')">Expense</div>
-                <div class="type-seg inc" id="btn-type-inc" onclick="app.setAddType('income')">Income</div>
                 <button style="background:none; border:none; font-size:16px; font-weight:600; color:var(--text);" onclick="app.closeAdd()">Cancel</button>
+                <div class="type-toggle-container">
+                    <div class="type-seg active exp" id="btn-type-exp" onclick="app.setAddType('expense')">Expense</div>
+                    <div class="type-seg inc" id="btn-type-inc" onclick="app.setAddType('income')">Income</div>
+                </div>
+                <!-- Delete Button (Hidden by default) -->
+                <button id="btn-add-delete" class="header-icon-btn hidden" style="color:var(--expense);" onclick="app.deleteCurrentTx()">
+                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </button>
+                <div id="btn-add-empty" style="width:24px;" class=""></div>
             </div>
             
-            <div class="calc-display">
-                <div class="calc-amt" id="calc-display-val">0</div>
-                <input type="text" class="calc-note-input" id="calc-note" placeholder="Add a note..." onkeyup="app.predictCategory(this.value)">
-            </div>
+            <div class="input-area">
+                <div class="calc-display">
+                    <div class="calc-amt" id="calc-display-val">0</div>
+                </div>
+                
+                <div class="input-row">
+                    <span id="selected-cat-icon" class="selected-cat-icon">🍔</span>
+                    <input type="text" class="calc-note-input" id="calc-note" placeholder="Add note" onkeyup="app.predictCategory(this.value)">
+                </div>
 
-            <div class="grid-section" id="category-grid">
-                <!-- Categories injected by JS -->
+                <div class="category-scroll" id="category-list">
+                    <!-- Categories injected by JS -->
+                </div>
             </div>
 
             <div class="numpad">
                 <!-- Row 1 -->
-                <button class="num-btn date-btn" id="add-date-btn" onclick="app.toggleDate()">Today</button>
-                <input type="date" id="hidden-date-input" style="width:0; height:0; opacity:0; position:absolute;">
                 <button class="num-btn op-btn" onclick="app.calcInput('/')">÷</button>
-                <button class="num-btn op-btn" onclick="app.calcInput('*')">×</button>
-                <button class="num-btn del-btn" onclick="app.calcInput('DEL')">⌫</button>
-                
-                <!-- Row 2 -->
                 <button class="num-btn" onclick="app.calcInput('7')">7</button>
                 <button class="num-btn" onclick="app.calcInput('8')">8</button>
                 <button class="num-btn" onclick="app.calcInput('9')">9</button>
-                <button class="num-btn op-btn" onclick="app.calcInput('-')">-</button>
                 
-                <!-- Row 3 -->
+                <!-- Row 2 -->
+                <button class="num-btn op-btn" onclick="app.calcInput('*')">×</button>
                 <button class="num-btn" onclick="app.calcInput('4')">4</button>
                 <button class="num-btn" onclick="app.calcInput('5')">5</button>
                 <button class="num-btn" onclick="app.calcInput('6')">6</button>
-                <button class="num-btn op-btn" onclick="app.calcInput('+')">+</button>
                 
-                <!-- Row 4 -->
+                <!-- Row 3 -->
+                <button class="num-btn op-btn" onclick="app.calcInput('-')">-</button>
                 <button class="num-btn" onclick="app.calcInput('1')">1</button>
                 <button class="num-btn" onclick="app.calcInput('2')">2</button>
                 <button class="num-btn" onclick="app.calcInput('3')">3</button>
-                <button class="num-btn primary submit-btn" id="btn-submit" onclick="app.handlePadSubmit()" style="grid-row: span 2;">✓</button>
                 
-                <!-- Row 5 -->
-                <button class="num-btn" onclick="app.calcInput('0')" style="grid-column: span 2;">0</button>
+                <!-- Row 4 -->
+                <button class="num-btn op-btn" onclick="app.calcInput('+')">+</button>
                 <button class="num-btn" onclick="app.calcInput('.')">.</button>
+                <button class="num-btn" onclick="app.calcInput('0')">0</button>
+                <button class="num-btn del-btn" onclick="app.calcInput('DEL')">⌫</button>
+                
+                <!-- Row 5 (Bottom Actions) -->
+                <button class="num-btn date-btn" id="add-date-btn" onclick="app.toggleDate()" style="background:var(--bg);">Today</button>
+                <input type="date" id="hidden-date-input" style="width:0; height:0; opacity:0; position:absolute;">
+                <button class="num-btn primary submit-btn" id="btn-submit" onclick="app.handlePadSubmit()" style="grid-column: span 3; font-weight:700;">✓</button>
             </div>
         </div>
 
@@ -509,6 +542,7 @@
                 addDate: new Date(),
                 catManType: 'expense',
                 searchQuery: '',
+                editingId: null, // Track editing state
                 user: null,
                 db: null,
                 auth: null
@@ -820,7 +854,8 @@
                     items.forEach(t => {
                         const el = document.createElement('div');
                         el.className = 'trans-item';
-                        el.onclick = () => this.deleteTx(t.id);
+                        // Changed click handler to open Edit mode
+                        el.onclick = () => this.openAdd(t);
                         const icon = this.getIcon(t.category, t.type);
                         
                         el.innerHTML = `
@@ -949,14 +984,36 @@
                 return '🏷️';
             },
 
-            openAdd: function() {
-                this.state.addValue = '0';
-                this.state.addNote = '';
-                this.state.addDate = new Date();
-                this.state.addType = 'expense';
+            openAdd: function(tx = null) {
+                // If tx is passed, we are in EDIT mode
+                if (tx) {
+                    this.state.editingId = tx.id;
+                    this.state.addType = tx.type;
+                    this.state.addValue = tx.amount.toString();
+                    this.state.addCat = tx.category;
+                    this.state.addDate = new Date(tx.date);
+                    this.state.addNote = tx.note || '';
+                    
+                    // Show delete button
+                    document.getElementById('btn-add-delete').classList.remove('hidden');
+                    document.getElementById('btn-add-empty').classList.add('hidden');
+                } else {
+                    // NEW mode
+                    this.state.editingId = null;
+                    this.state.addValue = '0';
+                    this.state.addNote = '';
+                    this.state.addDate = new Date();
+                    this.state.addType = 'expense';
+                    
+                    // Hide delete button
+                    document.getElementById('btn-add-delete').classList.add('hidden');
+                    document.getElementById('btn-add-empty').classList.remove('hidden');
+                }
+
                 document.getElementById('view-add').classList.remove('hidden');
                 this.renderAddUI();
             },
+            
             closeAdd: function() {
                 document.getElementById('view-add').classList.add('hidden');
             },
@@ -970,19 +1027,44 @@
                 document.getElementById('btn-type-exp').classList.toggle('active', this.state.addType === 'expense');
                 document.getElementById('btn-type-inc').classList.toggle('active', this.state.addType === 'income');
                 
-                const grid = document.getElementById('category-grid');
+                // Set color for amount text based on type
+                const amtEl = document.getElementById('calc-display-val');
+                amtEl.style.color = this.state.addType === 'expense' ? 'var(--expense)' : 'var(--income)';
+
+                const grid = document.getElementById('category-list');
                 grid.innerHTML = '';
                 const cats = this.data.categories[this.state.addType];
                 cats.forEach(c => {
                     const div = document.createElement('div');
-                    div.className = `cat-item ${this.state.addCat === c.name ? 'active' : ''}`;
-                    div.onclick = () => { this.state.addCat = c.name; this.renderAddUI(); };
-                    div.innerHTML = `<div class="cat-icon">${c.icon}</div><div class="cat-name">${c.name}</div>`;
+                    div.className = `cat-chip ${this.state.addCat === c.name ? 'active' : ''}`;
+                    div.onclick = () => { 
+                        this.state.addCat = c.name; 
+                        this.renderAddUI(); 
+                    };
+                    div.innerHTML = `
+                        <div class="cat-chip-icon">${c.icon}</div>
+                        <div class="cat-chip-name">${c.name}</div>
+                    `;
                     grid.appendChild(div);
                 });
+                
+                // Update selected cat icon in note row
+                const currentCat = cats.find(c => c.name === this.state.addCat);
+                document.getElementById('selected-cat-icon').innerText = currentCat ? currentCat.icon : '🏷️';
 
                 document.getElementById('calc-display-val').innerText = this.state.addValue;
+                
+                // Set note value
+                document.getElementById('calc-note').value = this.state.addNote;
+
                 const d = this.state.addDate;
+                
+                // Sync hidden input to ensure picker shows correct date
+                const year = d.getFullYear();
+                const month = String(d.getMonth() + 1).padStart(2, '0');
+                const day = String(d.getDate()).padStart(2, '0');
+                document.getElementById('hidden-date-input').value = `${year}-${month}-${day}`;
+
                 const today = new Date();
                 const dStr = (d.toDateString() === today.toDateString()) ? "Today" : `${d.getDate()}/${d.getMonth()+1}`;
                 document.getElementById('add-date-btn').innerText = dStr;
@@ -1033,10 +1115,18 @@
 
             toggleDate: function() {
                 const inp = document.getElementById('hidden-date-input');
-                inp.showPicker();
+                try {
+                    inp.showPicker();
+                } catch (e) {
+                    inp.click(); // Fallback for older browsers/webviews
+                }
                 inp.onchange = () => {
-                    this.state.addDate = new Date(inp.value);
-                    this.renderAddUI();
+                    if (inp.value) {
+                        // Fix Timezone issue: Parse YYYY-MM-DD explicitly as local
+                        const [y, m, d] = inp.value.split('-').map(Number);
+                        this.state.addDate = new Date(y, m - 1, d);
+                        this.renderAddUI();
+                    }
                 };
             },
             
@@ -1046,7 +1136,7 @@
                     if(!amt || amt <= 0) return alert("Invalid Amount");
 
                     const tx = {
-                        id: Date.now(),
+                        id: this.state.editingId || Date.now(), // Use existing ID if editing
                         type: this.state.addType,
                         amount: parseFloat(amt.toFixed(2)),
                         category: this.state.addCat,
@@ -1054,16 +1144,38 @@
                         date: this.state.addDate.toISOString().split('T')[0]
                     };
                     
-                    this.data.transactions.push(tx);
+                    if (this.state.editingId) {
+                        // Update existing
+                        const idx = this.data.transactions.findIndex(t => t.id === this.state.editingId);
+                        if (idx > -1) {
+                            this.data.transactions[idx] = tx;
+                        }
+                    } else {
+                        // Add new
+                        this.data.transactions.unshift(tx); // Add to top
+                    }
+
                     this.saveData();
                     this.closeAdd();
                     document.getElementById('calc-note').value = '';
                 } catch(e) { alert("Invalid Calculation"); }
             },
+
             deleteTx: function(id) {
                 if(confirm("Delete this transaction?")) {
                     this.data.transactions = this.data.transactions.filter(t => t.id !== id);
                     this.saveData();
+                    this.refreshUI();
+                }
+            },
+
+            deleteCurrentTx: function() {
+                if (this.state.editingId) {
+                    if(confirm("Delete this transaction?")) {
+                        this.data.transactions = this.data.transactions.filter(t => t.id !== this.state.editingId);
+                        this.saveData();
+                        this.closeAdd();
+                    }
                 }
             },
 
