@@ -1135,13 +1135,19 @@
                     const amt = parseFloat(this.state.addValue);
                     if(!amt || amt <= 0) return alert("Invalid Amount");
 
+                    const d = this.state.addDate;
+                    const year = d.getFullYear();
+                    const month = String(d.getMonth() + 1).padStart(2, '0');
+                    const day = String(d.getDate()).padStart(2, '0');
+                    const dateStr = `${year}-${month}-${day}`;
+
                     const tx = {
                         id: this.state.editingId || Date.now(), // Use existing ID if editing
                         type: this.state.addType,
                         amount: parseFloat(amt.toFixed(2)),
                         category: this.state.addCat,
                         note: document.getElementById('calc-note').value,
-                        date: this.state.addDate.toISOString().split('T')[0]
+                        date: dateStr
                     };
                     
                     if (this.state.editingId) {
